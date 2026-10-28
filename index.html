@@ -68,7 +68,7 @@
   .display .floor{font-family:"DM Mono",monospace;color:var(--manteiga);font-size:26px;letter-spacing:.12em;text-shadow:0 0 10px rgba(244,226,168,.55)}
   .display .msg{font-family:"DM Mono",monospace;color:#cbb98a;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
   .panel .label.hint{display:block;text-align:center;margin:16px 0 12px;color:var(--ink-soft)}
-  .buttons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .floor-btn{appearance:none;border:0;cursor:pointer;font:inherit;color:var(--cacau);
     display:flex;flex-direction:column;align-items:center;gap:8px;background:none}
   .floor-btn .circle{width:84px;height:84px;border-radius:50%;
@@ -80,6 +80,8 @@
   .floor-btn:active .circle,.floor-btn.on .circle{transform:translateY(4px);box-shadow:0 1px 0 #a69a85,0 0 0 4px rgba(244,226,168,.9),0 0 22px rgba(244,226,168,.95);
     border-color:var(--manteiga);color:var(--vinho)}
   .floor-btn.on .circle span{color:var(--vinho)}
+  .floor-btn.n .circle{background:radial-gradient(circle at 35% 30%,#fffaf0,var(--manteiga) 75%)}
+  @media (max-width:380px){.floor-btn .circle{width:74px;height:74px}.floor-btn .circle span{font-size:32px}}
 
   /* ---------- CARDS DOS APÊS ---------- */
   section{padding-block:34px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -278,6 +280,10 @@
         <button class="floor-btn" data-go="apto-42" data-floor="42" data-msg="Airbnb 42">
           <span class="circle"><span>42</span></span>
           <small>Airbnb 42</small>
+        </button>
+        <button class="floor-btn n" data-go="achadinhos" data-floor="N" data-msg="Nossas escolhas">
+          <span class="circle"><span>N</span></span>
+          <small>Nossas escolhas</small>
         </button>
       </div>
     </div>
@@ -563,6 +569,11 @@ document.querySelectorAll('.floor-btn').forEach(b => b.addEventListener('click',
   document.querySelectorAll('.floor-btn').forEach(x => x.classList.remove('on'));
   b.classList.add('on');
   msgEl.textContent = 'Subindo...';
+  if(isNaN(parseInt(b.dataset.floor,10))){
+    floorEl.textContent=b.dataset.floor; msgEl.textContent=b.dataset.msg; arrow.textContent='▼';
+    setTimeout(()=>{document.getElementById(b.dataset.go).scrollIntoView({behavior:'smooth',block:'start'}); arrow.textContent='▲';},450);
+    return;
+  }
   const alvo = parseInt(b.dataset.floor,10);
   let n = 0; const passos = 12;
   const t = setInterval(() => {
