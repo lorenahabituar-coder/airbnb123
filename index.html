@@ -67,7 +67,10 @@
   .display .arrow{color:var(--manteiga);font-size:18px;transition:transform .4s}
   .display .floor{font-family:"DM Mono",monospace;color:var(--manteiga);font-size:26px;letter-spacing:.12em;text-shadow:0 0 10px rgba(244,226,168,.55)}
   .display .msg{font-family:"DM Mono",monospace;color:#cbb98a;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
-  .panel .label.hint{display:block;text-align:center;margin:16px 0 12px;color:var(--ink-soft)}
+  .hint-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 12px}
+  .panel .label.hint{color:var(--ink-soft)}
+  .som{appearance:none;border:1px solid #c9bfae;background:var(--linho);color:var(--cacau);border-radius:999px;padding:5px 10px;font:700 11px "DM Sans",sans-serif;cursor:pointer}
+  .som[aria-pressed="false"]{opacity:.6}
   .buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .floor-btn{appearance:none;border:0;cursor:pointer;font:inherit;color:var(--cacau);
     display:flex;flex-direction:column;align-items:center;gap:8px;background:none}
@@ -271,17 +274,17 @@
         <span class="msg" id="msg">Escolha seu andar</span>
         <span class="floor" id="floor">··</span>
       </div>
-      <span class="label hint">Aperte um botão</span>
+      <div class="hint-row"><span class="label hint">Aperte um botão</span><button class="som" id="som" aria-pressed="true" aria-label="Som do elevador">🔊 Som</button></div>
       <div class="buttons">
-        <button class="floor-btn" data-go="apto-123" data-floor="123" data-msg="Airbnb 123">
+        <button class="floor-btn" data-go="apto-123" data-floor="123" data-msg="Airbnb 123" data-say="Subindo para o Airbnb 123.">
           <span class="circle"><span>123</span></span>
           <small>Airbnb 123</small>
         </button>
-        <button class="floor-btn" data-go="apto-42" data-floor="42" data-msg="Airbnb 42">
+        <button class="floor-btn" data-go="apto-42" data-floor="42" data-msg="Airbnb 42" data-say="Subindo para o Airbnb 42.">
           <span class="circle"><span>42</span></span>
           <small>Airbnb 42</small>
         </button>
-        <button class="floor-btn n" data-go="achadinhos" data-floor="N" data-msg="Nossas escolhas">
+        <button class="floor-btn n" data-go="achadinhos" data-floor="N" data-msg="Nossas escolhas" data-say="Descendo para Nossas escolhas.">
           <span class="circle"><span>N</span></span>
           <small>Nossas escolhas</small>
         </button>
@@ -564,11 +567,41 @@ document.querySelectorAll('.gallery').forEach(g=>{
   upd();
 });
 
+/* ===== SOM DO ELEVADOR ===== */
+let somOn=true;
+try{ if(localStorage.getItem('somElevador')==='off') somOn=false; }catch(e){}
+const somBtn=document.getElementById('som');
+const pintaSom=()=>{somBtn.setAttribute('aria-pressed',String(somOn)); somBtn.textContent=somOn?'🔊 Som':'🔇 Sem som';};
+pintaSom();
+somBtn.addEventListener('click',()=>{somOn=!somOn; pintaSom(); try{localStorage.setItem('somElevador',somOn?'on':'off')}catch(e){} if(!somOn&&'speechSynthesis' in window) speechSynthesis.cancel();});
+let actx=null;
+function plim(){
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    [[880,0],[660,0.18]].forEach(([f,t])=>{
+      const o=actx.createOscillator(), g=actx.createGain(); o.type='sine'; o.frequency.value=f;
+      const t0=actx.currentTime+t; g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.25,t0+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.9);
+      o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0+1);
+    });
+  }catch(e){}
+}
+function fala(txt){
+  if(!('speechSynthesis' in window)||!txt) return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt); u.lang='pt-BR'; u.rate=0.95;
+    const v=speechSynthesis.getVoices().find(v=>/pt[-_]BR/i.test(v.lang)); if(v) u.voice=v;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function anuncia(b){ if(!somOn) return; plim(); setTimeout(()=>fala(b.dataset.say),450); }
+
 /* ===== ELEVADOR ===== */
 const floorEl = document.getElementById('floor'), msgEl = document.getElementById('msg'), arrow = document.getElementById('arrow');
 document.querySelectorAll('.floor-btn').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.floor-btn').forEach(x => x.classList.remove('on'));
   b.classList.add('on');
+  anuncia(b);
   msgEl.textContent = 'Subindo...';
   if(isNaN(parseInt(b.dataset.floor,10))){
     floorEl.textContent=b.dataset.floor; msgEl.textContent=b.dataset.msg; arrow.textContent='▼';
