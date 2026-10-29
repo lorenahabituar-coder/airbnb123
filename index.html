@@ -262,12 +262,12 @@
   .hall-titulo h1{font-family:"Bebas Neue",sans-serif;font-weight:400;font-size:clamp(44px,13vw,60px);line-height:.9;color:var(--vinho)}
   .hall-titulo p{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cacau);margin-top:6px}
   .poco{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin-top:10px;padding-bottom:9vh}
-  .visor{display:flex;align-items:center;gap:10px;background:var(--cacau);border-radius:8px;padding:6px 14px;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+  .visor{display:flex;align-items:center;gap:10px;transform:translateX(-48px);background:var(--cacau);border-radius:8px;padding:6px 14px;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
   .visor .seta{color:var(--manteiga);font-size:13px;width:1em;text-align:center}
   .visor .andar{font-family:"DM Mono",monospace;color:var(--manteiga);font-size:22px;letter-spacing:.12em;min-width:3ch;text-align:center;text-shadow:0 0 10px rgba(244,226,168,.55);font-variant-numeric:tabular-nums}
   .visor .seta.pisca{animation:pisca .5s steps(2) infinite}
   @keyframes pisca{50%{opacity:.2}}
-  .vao{position:relative;width:min(74%,300px);aspect-ratio:.62;max-width:100%;border:12px solid var(--cacau);border-bottom-width:6px;border-radius:6px 6px 0 0;
+  .vao{position:relative;width:min(66vw,280px);flex:0 0 auto;aspect-ratio:.62;max-width:100%;border:12px solid var(--cacau);border-bottom-width:6px;border-radius:6px 6px 0 0;
     background:#2b1d19;overflow:hidden;box-shadow:0 18px 30px -18px rgba(0,0,0,.6)}
   .vao.anda{animation:treme .18s linear infinite}
   @keyframes treme{0%,100%{transform:translateY(0)}50%{transform:translateY(1.5px)}}
@@ -295,15 +295,16 @@
   .destino .bv{position:absolute;left:14px;right:14px;bottom:14px;z-index:2;color:var(--linho)}
   .destino .bv span{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--manteiga)}
   .destino .bv b{display:block;font-family:"Bebas Neue",sans-serif;font-weight:400;font-size:34px;line-height:.95;margin-top:4px}
-  .chamar{display:flex;align-items:center;gap:12px;margin-top:4px}
+  .linha{display:flex;align-items:center;justify-content:center;gap:12px;width:100%}
+  .chamar{display:flex;flex-direction:column;align-items:center;gap:8px;width:84px;flex:0 0 84px;text-align:center}
   .chamar-placa{background:linear-gradient(160deg,#ece6da,#cfc7b8);border:1px solid #b7ab96;border-radius:12px;padding:8px;box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}
   .chamar-btn{appearance:none;cursor:pointer;width:56px;height:56px;border-radius:50%;border:3px solid #b7ab96;display:grid;place-items:center;
-    background:radial-gradient(circle at 35% 30%,#fffdf7,#e7dfcf 70%);box-shadow:0 4px 0 #a69a85;font-size:20px;color:var(--cacau);transition:all .15s}
+    background:radial-gradient(circle at 35% 30%,#fffdf7,#e7dfcf 70%);box-shadow:0 4px 0 #a69a85;font-size:20px;color:#c77d12;transition:all .15s}
   .chamar-btn.on{transform:translateY(3px);box-shadow:0 1px 0 #a69a85,0 0 0 3px rgba(244,226,168,.9),0 0 18px rgba(244,226,168,.95);color:var(--vinho);border-color:var(--manteiga)}
   .chamar-btn:not(.on){animation:chama 2.2s ease-in-out infinite}
-  @keyframes chama{0%,100%{box-shadow:0 4px 0 #a69a85,0 0 0 0 rgba(142,27,37,.0)}50%{box-shadow:0 4px 0 #a69a85,0 0 0 7px rgba(142,27,37,.18)}}
-  .chamar-txt{font-weight:700;font-size:14px;color:var(--cacau);line-height:1.25;max-width:15ch}
-  .chamar-txt span{display:block;font-weight:500;font-size:12px;color:var(--ink-soft)}
+  @keyframes chama{0%,100%{box-shadow:0 4px 0 #a69a85,0 0 0 0 rgba(232,170,60,0)}50%{box-shadow:0 4px 0 #a69a85,0 0 0 8px rgba(232,170,60,.45),0 0 22px rgba(232,170,60,.6)}}
+  .chamar-txt{font-weight:700;font-size:12.5px;color:var(--cacau);line-height:1.2}
+  .chamar-txt span{display:block;font-weight:500;font-size:11px;color:var(--ink-soft);margin-top:2px}
   .hall-topo{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .pular-hall{display:block;text-align:center;margin-top:10px;font-size:12.5px;font-weight:500;color:var(--linho);text-decoration:underline;text-underline-offset:3px;position:relative;z-index:2}
   @media (prefers-reduced-motion:reduce){.porta,.destino{transition:none}.vao.anda,.chamar-btn{animation:none}}
@@ -333,6 +334,7 @@
     </div>
     <div class="poco">
       <div class="visor" aria-hidden="true"><span class="seta" id="vSeta">▲</span><span class="andar" id="vAndar">T</span></div>
+      <div class="linha">
       <div class="vao" id="vao">
         <div class="cabine" id="cabine">
           <h2>Para qual andar?</h2>
@@ -348,6 +350,7 @@
       <div class="chamar">
         <div class="chamar-placa"><button class="chamar-btn" id="chamar" aria-label="Chamar o elevador">▲</button></div>
         <div class="chamar-txt" id="chamarTxt">Chame o elevador<span>Toque no botão</span></div>
+      </div>
       </div>
     </div>
     <a class="pular-hall" href="#apto-123">Prefere ir direto? Ver os apês ↓</a>
