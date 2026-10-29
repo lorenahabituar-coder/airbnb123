@@ -247,6 +247,12 @@
 
 
 
+  .subir{appearance:none;cursor:pointer;width:100%;margin-top:14px;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;text-align:left;
+    background:var(--azul);border:1px solid var(--azul-2);border-radius:14px;padding:11px 14px;color:var(--cacau);font:700 14px "DM Sans",sans-serif}
+  .subir span{grid-row:1/3;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fffdf7,#e7dfcf 70%);
+    border:2px solid #b7ab96;box-shadow:0 3px 0 #a69a85;font-size:18px;color:var(--vinho)}
+  .subir small{font-weight:500;font-size:12px;color:var(--ink-soft)}
+  .subir:active span{transform:translateY(2px);box-shadow:0 1px 0 #a69a85}
   /* ---------- HALL DO ELEVADOR ---------- */
   .hero{position:relative;min-height:100vh;min-height:100svh;background:var(--azul);display:flex;flex-direction:column;
     padding-block:calc(16px + env(safe-area-inset-top,0px)) 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow:hidden}
@@ -401,6 +407,7 @@
           </div>
         </div>
         <a class="btn" href="https://www.airbnb.com/l/pIHyyd05" target="_blank" rel="noopener">Ver datas e reservar →</a>
+        <button class="subir" type="button"><span>↑</span>Voltar ao elevador<small>ver os outros andares</small></button>
       </div>
     </article>
 
@@ -443,6 +450,7 @@
         </div>
         <a class="btn" href="https://www.airbnb.com.br/rooms/1720394115623755378" target="_blank" rel="noopener">Ver datas e reservar →</a>
         <a class="btn-ghost" href="https://wa.me/5541985412826?text=Oi!%20Vi%20o%20Apto%2042%20e%20queria%20saber%20sobre%20valores%20para%20estadia%20longa." target="_blank" rel="noopener">Vai ficar mais de um mês? Pergunte sobre valores especiais</a>
+        <button class="subir" type="button"><span>↑</span>Voltar ao elevador<small>ver os outros andares</small></button>
       </div>
     </article>
   </section>
@@ -519,6 +527,7 @@
       <div class="store meli off"><b>Mercado Livre</b><span>Em atualização, volte logo</span></div>
     </div>
     <p class="disclaimer">Alguns links são de afiliado: comprando por eles você não paga nada a mais e ajuda os apês a ficarem cada vez mais bonitos.</p>
+    <button class="subir" type="button"><span>↑</span>Voltar ao elevador<small>ver os outros andares</small></button>
   </section>
 
   <!-- RODAPÉ -->
@@ -703,6 +712,11 @@ function anuncia(b){ if(!somOn) return; plim(); setTimeout(()=>fala(b.dataset.sa
     await espera(1500);
     document.getElementById(b.dataset.go).scrollIntoView({behavior:reduz?'auto':'smooth',block:'start'});
     ocupado=false;
+  }));
+  // voltar ao elevador a partir dos apês
+  document.querySelectorAll('.subir').forEach(x=>x.addEventListener('click',()=>{
+    document.getElementById('hall').scrollIntoView({behavior:reduz?'auto':'smooth',block:'start'});
+    setTimeout(()=>{ if(!ocupado&&estado!=='cabine') chamar.click(); },reduz?50:750);
   }));
 })();
 
